@@ -64,7 +64,7 @@
 		 */
 		var moveElement = function() {
 			// Verify the source element still exists in the DOM
-			if (document.contains(sourceEl[0])) {
+			if (!document.contains || document.contains(sourceEl[0])) {
 				// Create placeholder so we can move it back if needed
 				placeholder = $('<span class="js-responsive-dom-placeholder"/>');
 				sourceEl.after(placeholder);
@@ -80,7 +80,7 @@
 		 */
 		var revertElement = function() {
 			// Verify the placeholder still exists in the DOM
-			if (placeholder !== null && document.contains(placeholder[0])) {
+			if (placeholder !== null && (!document.contains || document.contains(placeholder[0]))) {
 				// Move element back and remove placeholder
 				placeholder.after(sourceEl);
 
