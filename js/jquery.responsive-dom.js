@@ -55,12 +55,15 @@
 		 * element to its new position
 		 */
 		var moveElement = function() {
-			// Create placeholder so we can move it back if needed
-			placeholder = $('<span class="js-responsive-dom-placeholder"/>');
-			sourceEl.after(placeholder);
+			// Verify the source element still exists in the DOM
+			if (document.contains(sourceEl[0])) {
+				// Create placeholder so we can move it back if needed
+				placeholder = $('<span class="js-responsive-dom-placeholder"/>');
+				sourceEl.after(placeholder);
 
-			// Move element
-			$(settings.appendTo).eq(0).append(sourceEl);
+				// Move element
+				$(settings.appendTo).eq(0).append(sourceEl);
+			}
 		};
 
 		/**
@@ -68,11 +71,14 @@
 		 * placeholder element
 		 */
 		var revertElement = function() {
-			// Move element back and remove placeholder
-			placeholder.after(sourceEl);
+			// Verify the placeholder still exists in the DOM
+			if (placeholder !== null && document.contains(placeholder[0])) {
+				// Move element back and remove placeholder
+				placeholder.after(sourceEl);
 
-			placeholder.remove();
-			placeholder = null;
+				placeholder.remove();
+				placeholder = null;
+			}
 		};
 
 		/**
