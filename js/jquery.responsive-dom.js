@@ -2,7 +2,15 @@
  * A jQuery plugin to move elements in the DOM based on media queries
  * @param options
  */
-(function($) {
+(function(factory) {
+	'use strict';
+
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	} else {
+		factory(jQuery);
+	}
+}(function($) {
 	'use strict';
 
 	$.fn.responsiveDom = function (options) {
@@ -11,7 +19,7 @@
 		var settings = $.extend({
 			appendTo: 'body',             // The provided object will be moved here...
 			mediaQuery: '(min-width: 0)', // ...when this media query is true.
-			callback: null                // If provided, the callback will run after DOM updates
+			callback: null                // If provided, the callback will run after DOM updates.
 		}, options);
 
 		var sourceEl = this;
@@ -106,4 +114,4 @@
 		// Always return the target object to allow chaining.
 		return this;
 	};
-})(jQuery);
+}));
