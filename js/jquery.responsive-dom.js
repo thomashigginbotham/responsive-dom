@@ -2,6 +2,7 @@
   var instances = [];
   var throttleCount = 0;
   var throttleRate = 3;
+  var timer;
 
   $.fn.responsiveDom = function(options){
     var settings = $.extend({
@@ -19,14 +20,18 @@
     throttleCount++;
     if(throttleCount >= throttleRate){
       throttleCount = 0;
-    } else {
-      return false;
+      update();
     }
 
+    clearTimeout(timer);
+    timer = setTimeout(update, 100);
+  });
+
+  function update(){
     instances.forEach(function(inst){
       inst.update();
     });
-  });
+  }
 
 })(window, jQuery);
 
