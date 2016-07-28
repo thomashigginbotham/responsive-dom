@@ -1,5 +1,7 @@
 (function(window, $) {
   var instances = [];
+  var throttleCount = 0;
+  var throttleRate = 3;
 
   $.fn.responsiveDom = function(options){
     var settings = $.extend({
@@ -14,6 +16,13 @@
   };
 
   $(window).on('resize', function(){
+    throttleCount++;
+    if(throttleCount >= throttleRate){
+      throttleCount = 0;
+    } else {
+      return false;
+    }
+
     instances.forEach(function(inst){
       inst.update();
     });
