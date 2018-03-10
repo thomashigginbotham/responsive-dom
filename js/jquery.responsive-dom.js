@@ -3,126 +3,126 @@
  * @param options
  */
 (function(factory) {
-    'use strict';
+	'use strict';
 
-    if (typeof define === 'function' && define.amd) {
-        define(['jquery'], factory);
-    } else {
-        factory(jQuery);
-    }
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	} else {
+		factory(jQuery);
+	}
 }(function($) {
-    'use strict';
+	'use strict';
 
-    $.fn.responsiveDom = function (options) {
-        // The settings object provides default settings.
-        // The options argument can override them.
-        var settings = $.extend({
-            appendTo: null,             // The provided object will be moved here...
-            prependTo: null,
-            mediaQuery: '(min-width: 0)', // ...when this media query is true.
-            callback: null                // If provided, the callback will run after DOM updates.
-        }, options);
+	$.fn.responsiveDom = function (options) {
+		// The settings object provides default settings.
+		// The options argument can override them.
+		var settings = $.extend({
+			appendTo: null,             // The provided object will be moved here...
+			prependTo: null,
+			mediaQuery: '(min-width: 0)', // ...when this media query is true.
+			callback: null                // If provided, the callback will run after DOM updates.
+		}, options);
 
-        var sourceEl = this;
-        var placeholder = null;
-        var isMoved = false;
+		var sourceEl = this;
+		var placeholder = null;
+		var isMoved = false;
 
-        /**
-         * Initializes the plugin
-         */
-        var init = function() {
-            // Update the DOM now...
-            updateDom();
+		/**
+		 * Initializes the plugin
+		 */
+		var init = function() {
+			// Update the DOM now...
+			updateDom();
 
-            // ...and again when the window resizes
-            $(window).on('resize.responsiveDom', debounce(updateDom, 100));
-        };
+			// ...and again when the window resizes
+			$(window).on('resize.responsiveDom', debounce(updateDom, 100));
+		};
 
-        /**
-         * Moves or reverts element DOM position if the media query conditions are met
-         */
-        var updateDom = function() {
-            // Check if media query conditions are met
-            if (!isMoved && matchMedia(settings.mediaQuery).matches) {
-                moveElement();
-                isMoved = true;
-            } else if (isMoved && !matchMedia(settings.mediaQuery).matches) {
-                revertElement();
-                isMoved = false;
-            } else {
-                return;
-            }
+		/**
+		 * Moves or reverts element DOM position if the media query conditions are met
+		 */
+		var updateDom = function() {
+			// Check if media query conditions are met
+			if (!isMoved && matchMedia(settings.mediaQuery).matches) {
+				moveElement();
+				isMoved = true;
+			} else if (isMoved && !matchMedia(settings.mediaQuery).matches) {
+				revertElement();
+				isMoved = false;
+			} else {
+				return;
+			}
 
-            // Run callback function if provided
-            if (typeof settings.callback === 'function') {
-                settings.callback(isMoved);
-            }
-        };
+			// Run callback function if provided
+			if (typeof settings.callback === 'function') {
+				settings.callback(isMoved);
+			}
+		};
 
-        /**
-         * Creates a placeholder at the element's current DOM position and moves the
-         * element to its new position
-         */
-        var moveElement = function() {
-            // Verify the source element still exists in the DOM
-            if (!document.contains || document.contains(sourceEl[0])) {
-                // Create placeholder so we can move it back if needed
-                placeholder = $('<span class="js-responsive-dom-placeholder"/>');
-                sourceEl.after(placeholder);
+		/**
+		 * Creates a placeholder at the element's current DOM position and moves the
+		 * element to its new position
+		 */
+		var moveElement = function() {
+			// Verify the source element still exists in the DOM
+			if (!document.contains || document.contains(sourceEl[0])) {
+				// Create placeholder so we can move it back if needed
+				placeholder = $('<span class="js-responsive-dom-placeholder"/>');
+				sourceEl.after(placeholder);
 
-                // Check if Append or Prepend
+				// Check if Append or Prepend
 
-                if(settings.appendTo !== null) {
+				if(settings.appendTo !== null) {
 
-                    // Move element
-                    $(settings.appendTo).eq(0).append(sourceEl);
-                } else {
+					 // Move element
+					 $(settings.appendTo).eq(0).append(sourceEl);
+				} else {
 
-                    // Move element
-                    $(settings.prependTo).eq(0).prepend(sourceEl);
-                }
+				// Move element
+				$(settings.prependTo).eq(0).prepend(sourceEl);
+			}
 
-            }
-        };
+			}
+			};
 
-        /**
-         * Returns element to its previous position in the DOM and removes the
-         * placeholder element
-         */
-        var revertElement = function() {
-            // Verify the placeholder still exists in the DOM
-            if (placeholder !== null && (!document.contains || document.contains(placeholder[0]))) {
-                // Move element back and remove placeholder
-                placeholder.after(sourceEl);
+		/**
+		 * Returns element to its previous position in the DOM and removes the
+		 * placeholder element
+		 */
+		var revertElement = function() {
+			// Verify the placeholder still exists in the DOM
+			if (placeholder !== null && (!document.contains || document.contains(placeholder[0]))) {
+				// Move element back and remove placeholder
+				placeholder.after(sourceEl);
 
-                placeholder.remove();
-                placeholder = null;
-            }
-        };
+				placeholder.remove();
+				placeholder = null;
+			}
+		};
 
-        /**
-         * Returns a function that cannot be called in succession unless a specified
-         * amount of time has passed
-         * @param func - The function to debounce
-         * @param wait - The wait time (ms) before running the function again
-         * @returns The debounced function
-         */
-        var debounce = function(func, wait) {
-            var timeout;
+		/**
+		 * Returns a function that cannot be called in succession unless a specified
+		 * amount of time has passed
+		 * @param func - The function to debounce
+		 * @param wait - The wait time (ms) before running the function again
+		 * @returns The debounced function
+		 */
+		var debounce = function(func, wait) {
+			var timeout;
 
-            return function() {
-                clearTimeout(timeout);
+			return function() {
+				clearTimeout(timeout);
 
-                timeout = setTimeout(function() {
-                    func();
-                }, wait);
-            };
-        };
+				timeout = setTimeout(function() {
+					func();
+				}, wait);
+			};
+		};
 
-        // Let's go!
-        init();
+		// Let's go!
+		init();
 
-        // Always return the target object to allow chaining.
-        return this;
-    };
+		// Always return the target object to allow chaining.
+		return this;
+	};
 }));
