@@ -17,7 +17,8 @@
 		// The settings object provides default settings.
 		// The options argument can override them.
 		var settings = $.extend({
-			appendTo: 'body',             // The provided object will be moved here...
+			appendTo: null,             // The provided object will be moved here...
+			prependTo: null,
 			mediaQuery: '(min-width: 0)', // ...when this media query is true.
 			callback: null                // If provided, the callback will run after DOM updates.
 		}, options);
@@ -69,10 +70,20 @@
 				placeholder = $('<span class="js-responsive-dom-placeholder"/>');
 				sourceEl.after(placeholder);
 
+				// Check if Append or Prepend
+
+				if(settings.appendTo !== null) {
+
+					 // Move element
+					 $(settings.appendTo).eq(0).append(sourceEl);
+				} else {
+
 				// Move element
-				$(settings.appendTo).eq(0).append(sourceEl);
+				$(settings.prependTo).eq(0).prepend(sourceEl);
 			}
-		};
+
+			}
+			};
 
 		/**
 		 * Returns element to its previous position in the DOM and removes the
